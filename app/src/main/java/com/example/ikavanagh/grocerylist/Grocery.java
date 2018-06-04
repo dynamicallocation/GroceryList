@@ -2,7 +2,7 @@ package com.example.ikavanagh.grocerylist;
 
 public class Grocery {
 
-    private long id;
+    private String id;
     private String name;
     private String quantity;
 
@@ -11,6 +11,15 @@ public class Grocery {
 
         this.name = name;
 
+    }
+    public Grocery()
+    {
+
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
     }
 
     public String getName()
@@ -24,13 +33,13 @@ public class Grocery {
     }
 
 
-    public void setID(long id)
+    public void setID(String id)
     {
         this.id = id;
 
     }
 
-    public long getId()
+    public String getId()
     {
         return id;
     }

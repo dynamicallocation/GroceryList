@@ -19,6 +19,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     private String myGrocery;
     private String myQuantity;
+    private boolean isInput;
     DatabaseHelper helper = new DatabaseHelper(this);
 
 
@@ -39,50 +40,98 @@ public class MainActivity extends AppCompatActivity {
 
         TextView groceryText = (TextView) findViewById(R.id.groceryInput);
         myGrocery = groceryText.getText().toString();
-        Grocery list = new Grocery(myGrocery);
-        boolean insertData = helper.addData(list);
-        if(insertData == true)
-        {
-            Toast.makeText(MainActivity.this,"Success",Toast.LENGTH_SHORT).show();
+
+        if(myGrocery.length() != 0) {
+                Grocery list = new Grocery(myGrocery);
+                boolean insertData = helper.addData(list);
+                if (insertData == true) {
+                    Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "Failure", Toast.LENGTH_SHORT).show();
+                }
         }
         else
         {
-            Toast.makeText(MainActivity.this,"Failure",Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this,"You Must Enter a Value",Toast.LENGTH_LONG).show();
         }
     }
 
     public void viewList(View view)
     {
-        Cursor data = helper.showData();
-        if(data.getCount() == 0)
-        {
-            display("Error","No Data Found");
+
+        Intent i = new Intent(MainActivity.this,ListData.class);
+        startActivity(i);
+
+
+    }
+
+
+
+    public void updateList(View view)
+    {
+
+        TextView input = (TextView) findViewById(R.id.idInput);
+        TextView newItem = (TextView) findViewById(R.id.groceryInput);
+
+
+        int temp = input.getText().toString().length();
+
+        String idInput = input.getText().toString();
+        String item = newItem.getText().toString();
+
+
+        if(temp > 0) {
+             isInput = helper.updateData(idInput,item);
+             if(isInput == true)
+             {
+                 Toast.makeText(MainActivity.this,"Success",Toast.LENGTH_LONG).show();
+             }
+             else
+             {
+                 Toast.makeText(MainActivity.this,"Failure",Toast.LENGTH_LONG).show();
+             }
         }
         else
         {
-            while(data.moveToNext())
-            {
-                StringBuffer buffer = new StringBuffer();
-                buffer.append("ID " + data.getString(0) + "\n");
-                buffer.append("Item " + data.getString(1) + "\n");
-
-                display("All Stored Data",buffer.toString());
-
-            }
-
+            Toast.makeText(MainActivity.this,"You Must Enter an ID",Toast.LENGTH_LONG).show();
         }
 
-
     }
 
-    public void display(String title,String message)
+
+    public void removeRecord(View view)
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(true);
-        builder.setTitle(title);
-        builder.setMessage(message);
-        builder.show();
+
+        TextView input = (TextView) findViewById(R.id.idInput);
+        TextView newItem = (TextView) findViewById(R.id.groceryInput);
+
+
+        int temp = input.getText().toString().length();
+        String idInput = input.getText().toString();
+
+
+
+        if(temp > 0) {
+
+            Integer deleteRecord = helper.deleteData(idInput);
+            if(deleteRecord > 0)
+            {
+                Toast.makeText(MainActivity.this,"Record Deleted Successfully",Toast.LENGTH_LONG).show();
+            }
+            else
+            {
+                Toast.makeText(MainActivity.this,"Deletion Failed",Toast.LENGTH_LONG).show();
+            }
+        }
+        else
+        {
+            Toast.makeText(MainActivity.this,"You Must Enter an ID",Toast.LENGTH_LONG).show();
+        }
+
     }
+
+
+
 
 
 
