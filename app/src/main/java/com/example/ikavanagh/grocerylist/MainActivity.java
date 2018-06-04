@@ -2,7 +2,9 @@ package com.example.ikavanagh.grocerylist;
 
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -48,6 +50,40 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this,"Failure",Toast.LENGTH_SHORT).show();
         }
     }
+
+    public void viewList(View view)
+    {
+        Cursor data = helper.showData();
+        if(data.getCount() == 0)
+        {
+            display("Error","No Data Found");
+        }
+        else
+        {
+            while(data.moveToNext())
+            {
+                StringBuffer buffer = new StringBuffer();
+                buffer.append("ID " + data.getString(0) + "\n");
+                buffer.append("Item " + data.getString(1) + "\n");
+
+                display("All Stored Data",buffer.toString());
+
+            }
+
+        }
+
+
+    }
+
+    public void display(String title,String message)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.show();
+    }
+
 
 
 
